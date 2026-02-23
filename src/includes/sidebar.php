@@ -13,7 +13,7 @@ $currentQ = $_GET['q'] ?? '';
 
   <div class="searchWrap" aria-label="Buscador">
     <!-- BÚSQUEDA NORMAL (fallback) -->
-    <form action="<?= htmlspecialchars($basePath) ?>/pages/search.php" method="GET" id="searchForm">
+    <form action="/pages/search.php" method="GET" id="searchForm">
       <input
         id="searchInput"
         class="input"
@@ -40,9 +40,9 @@ $currentQ = $_GET['q'] ?? '';
 
   <h3 style="margin:0;">Categorías</h3>
   <div class="list">
-    <a class="btn" href="<?= htmlspecialchars($basePath) ?>/pages/category.php?cat=cocina">🍳 Cocina</a>
-    <a class="btn" href="<?= htmlspecialchars($basePath) ?>/pages/category.php?cat=viajes">✈️ Viajes</a>
-    <a class="btn" href="<?= htmlspecialchars($basePath) ?>/pages/category.php?cat=gaming">🎮 Gaming</a>
+    <a class="btn" href="/pages/category.php?cat=cocina">🍳 Cocina</a>
+    <a class="btn" href="/pages/category.php?cat=viajes">✈️ Viajes</a>
+    <a class="btn" href="/pages/category.php?cat=gaming">🎮 Gaming</a>
   </div>
 
 </aside>

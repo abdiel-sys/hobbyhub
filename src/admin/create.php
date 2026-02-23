@@ -38,7 +38,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <option value="gaming">Gaming</option>
   </select><br><br>
 
-  <input class="input" name="read_time" placeholder="Tiempo de lectura (min)" required minlength="20"><br><br>
+  <input class="input" name="read_time" placeholder="Tiempo de lectura (min)" required ><br><br>
 
   <input class="input" name="tags" placeholder="Tags (coma separadas)" required><br><br>
 
