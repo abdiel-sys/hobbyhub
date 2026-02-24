@@ -33,7 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 </head>
 <body>
 <div class="wrap">
-  <section class="card" style="max-width:400px;margin:auto;">
+  <section class="card" style="max-width:400px; margin: 15% auto;">
     <h2>Admin Login</h2>
 
     <?php if ($error): ?>
