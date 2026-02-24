@@ -1,6 +1,6 @@
 <?php
 
-require_once "../config/database.php";
+require_once "config/database.php";
 
 // posts
 $stmt = $pdo->query("SELECT * FROM posts ORDER BY created_at DESC LIMIT 3");
@@ -10,7 +10,7 @@ $posts = $stmt->fetchAll();
 $breadcrumbs = [
   ['label' => 'Inicio']
 ];
-require_once "../includes/breadcrumbs.php";
+require_once "includes/breadcrumbs.php";
 ?>
 
 <main>
@@ -39,5 +39,5 @@ require_once "../includes/breadcrumbs.php";
   <?php endforeach; ?>
 </section>
 
-<?php include "../includes/sidebar.php"; ?>
+<?php include "includes/sidebar.php"; ?>
 </main>

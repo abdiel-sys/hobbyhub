@@ -9,21 +9,27 @@ $breadcrumbs = [
 $q = trim($_GET['q'] ?? '');
 $breadcrumbs[1]['label'] = 'Buscar: "' . $q . '"';
 
+
+$search = "%{$q}%";
+
 $stmt = $pdo->prepare("
   SELECT * FROM posts
-  WHERE title LIKE :q
-     OR content LIKE :q
-     OR tags LIKE :q
-     OR category LIKE :q
+  WHERE title LIKE :q1
+     OR content LIKE :q2
+     OR tags LIKE :q3
+     OR category LIKE :q4
   ORDER BY created_at DESC
 ");
 
 $stmt->execute([
-  ':q' => "%$q%"
+  ':q1' => $search,
+  ':q2' => $search,
+  ':q3' => $search,
+  ':q4' => $search
 ]);
 
-
 $posts = $stmt->fetchAll();
+echo $q;
 ?>
 <?php require_once "../includes/breadcrumbs.php"; ?>
 <main>
