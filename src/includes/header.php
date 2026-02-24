@@ -38,6 +38,7 @@ $BASE = ($pos !== false) ? substr($uri, 0, $pos) . '/src' : '';
     <a class="pill" href="<?= $BASE ?>/sitemap-tree.php">Mapa de sitio</a>
 
     <?php if (!isset($_SESSION['admin'])): ?>
+      <a class="pill" href="<?= $BASE ?>/admin/register.php">📝 Registrarse</a>
       <a class="pill" href="<?= $BASE ?>/admin/login.php">🔐 Login</a>
     <?php else: ?>
       <a class="pill" href="<?= $BASE ?>/admin/dashboard.php">🛠 Admin</a>

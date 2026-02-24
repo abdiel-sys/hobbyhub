@@ -1,15 +1,18 @@
-CREATE DATABASE project_php;
+CREATE DATABASE IF NOT EXISTS project_php CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE project_php;
 
-CREATE TABLE posts (
+CREATE TABLE IF NOT EXISTS posts (
   id INT AUTO_INCREMENT PRIMARY KEY,
   title VARCHAR(255) NOT NULL,
-  content TEXT NOT NULL,
+  content LONGTEXT NOT NULL,
   category ENUM('cocina','viajes','gaming') NOT NULL,
   read_time INT,
   created_at DATE,
-  tags VARCHAR(255)
-);
+  tags VARCHAR(255),
+  INDEX idx_category (category),
+  INDEX idx_created_at (created_at),
+  FULLTEXT INDEX ft_title_content (title, content)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO posts (title, content, category, read_time, created_at, tags)
 VALUES
@@ -89,16 +92,19 @@ INSERT INTO posts (title, content, category, read_time, created_at, tags) VALUES
 );
 
 -- Add user admin
-CREATE TABLE users (
+CREATE TABLE IF NOT EXISTS users (
   id INT AUTO_INCREMENT PRIMARY KEY,
   username VARCHAR(50) UNIQUE NOT NULL,
-  password VARCHAR(255) NOT NULL
-);
+  password VARCHAR(255) NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  INDEX idx_username (username)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-INSERT INTO users (username, password)
+-- Insertar usuario admin solo si no existe
+INSERT IGNORE INTO users (username, password)
 VALUES (
   'admin',
-  '$2y$10$e0NRn0H9m9hLZKzF4hD6UeKJb0n7V8Yc9fRZB8P0mM8XbZr3yJXCu'
+  '$2y$10$zaja0Wbaf13rG7qcLaT20.DLshp4MJexT2O.hcklVk8c5umGvw7pK'
 );
 
 
