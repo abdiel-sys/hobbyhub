@@ -1,10 +1,16 @@
 <?php
+
+require_once "../config/database.php";
+
+// posts
 $stmt = $pdo->query("SELECT * FROM posts ORDER BY created_at DESC LIMIT 3");
 $posts = $stmt->fetchAll();
+
+
 $breadcrumbs = [
   ['label' => 'Inicio']
 ];
-require_once "includes/breadcrumbs.php";
+require_once "../includes/breadcrumbs.php";
 ?>
 
 <main>
@@ -15,22 +21,23 @@ require_once "includes/breadcrumbs.php";
     <article class="post">
       <div class="meta">
         <span class="badge">
-          <?= ucfirst($post['category']) ?>
+          <?= ucfirst(htmlspecialchars($post['category'])) ?>
         </span>
-        <span>⏱ <?= $post['read_time'] ?> min</span>
-        <span>📅 <?= $post['created_at'] ?></span>
+        <span>⏱ <?= (int)$post['read_time'] ?> min</span>
+        <span>📅 <?= htmlspecialchars($post['created_at']) ?></span>
       </div>
 
       <h3><?= htmlspecialchars($post['title']) ?></h3>
-      <p><?= substr($post['content'], 0, 120) ?>...</p>
+      <p><?= htmlspecialchars(substr($post['content'], 0, 120)) ?>...</p>
+
 
       <a class="btn primary"
-         href="/pages/post.php?id=<?= $post['id'] ?>">
+         href="post.php?id=<?= (int)$post['id'] ?>">
          Leer artículo
       </a>
     </article>
   <?php endforeach; ?>
 </section>
-<?php include "includes/sidebar.php"; ?>
-</main>
 
+<?php include "../includes/sidebar.php"; ?>
+</main>
