@@ -203,3 +203,137 @@
   border-radius: 12px;
   background: rgba(255,107,107,.08);
 }
+
+/* Login & Register styles */
+.auth-container {
+  max-width: 420px;
+  margin: 60px auto;
+}
+
+.auth-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.auth-header h2 {
+  margin: 0 0 10px 0;
+  font-size: 28px;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.auth-header p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.form-group {
+  margin-bottom: 18px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.alert-success {
+  background: rgba(94, 240, 194, 0.08);
+  border: 1px solid rgba(94, 240, 194, 0.3);
+  color: var(--accent2);
+  padding: 12px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  font-size: 13px;
+}
+
+.alert-error {
+  background: rgba(255, 107, 107, 0.08);
+  border: 1px solid rgba(255, 107, 107, 0.3);
+  color: #ff9999;
+  padding: 12px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  font-size: 13px;
+}
+
+.auth-actions {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.auth-actions button {
+  flex: 1;
+  cursor: pointer;
+}
+
+.divider {
+  text-align: center;
+  margin: 24px 0;
+  position: relative;
+}
+
+.divider::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--line);
+}
+
+.divider span {
+  background: var(--card);
+  padding: 0 10px;
+  color: var(--muted);
+  font-size: 12px;
+  position: relative;
+}
+
+.auth-link {
+  text-align: center;
+}
+
+.auth-link a {
+  display: block;
+  padding: 12px 14px;
+  background: rgba(122, 162, 255, 0.08);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.auth-link a:hover {
+  background: rgba(122, 162, 255, 0.15);
+  border-color: var(--accent);
+  color: var(--text);
+}
+
+.back-link {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.back-link a {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 12px;
+  transition: color 0.3s ease;
+}
+
+.back-link a:hover {
+  color: var(--accent);
+}

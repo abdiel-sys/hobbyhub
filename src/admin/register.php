@@ -17,88 +17,24 @@ if (isset($_SESSION['admin'])) {
   <link rel="stylesheet" href="../public/css/style.css">
   <title>Registro - HobbyHub</title>
   <style>
-    .form-group {
-      margin-bottom: 20px;
-    }
-
-    .form-group label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: 500;
-      font-size: 14px;
-    }
-
-    .form-group input {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      font-size: 14px;
-    }
-
-    .form-group input:focus {
-      outline: none;
-      border-color: #007bff;
-      box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
-    }
-
-    .alert {
-      padding: 12px;
-      border-radius: 4px;
-      margin-bottom: 20px;
-      font-size: 14px;
-    }
-
-    .alert-success {
-      background-color: #d4edda;
-      color: #155724;
-      border: 1px solid #c3e6cb;
-    }
-
-    .alert-error {
-      background-color: #f8d7da;
-      color: #721c24;
-      border: 1px solid #f5c6cb;
-    }
-
-    .alert-hidden {
-      display: none;
-    }
-
-    .button-group {
-      display: flex;
-      gap: 10px;
-    }
-
-    .button-group button {
-      flex: 1;
-    }
-
-    .login-link {
-      margin-top: 20px;
-      text-align: center;
-      font-size: 14px;
-    }
-
-    .login-link a {
-      color: #007bff;
-      text-decoration: none;
-    }
-
-    .login-link a:hover {
-      text-decoration: underline;
-    }
-
     .spinner {
       display: inline-block;
       width: 16px;
       height: 16px;
-      border: 2px solid #f3f3f3;
-      border-top: 2px solid #007bff;
+      border: 2px solid rgba(122, 162, 255, 0.3);
+      border-top: 2px solid var(--accent);
       border-radius: 50%;
       animation: spin 1s linear infinite;
       margin-right: 8px;
       vertical-align: middle;
+    }
+
+    .alert {
+      display: block;
+    }
+
+    .alert.alert-hidden {
+      display: none;
     }
 
     @keyframes spin {
@@ -109,8 +45,11 @@ if (isset($_SESSION['admin'])) {
 </head>
 <body>
 <div class="wrap">
-  <section class="card" style="max-width:450px;margin:50px auto;">
-    <h2>📝 Crear Cuenta</h2>
+  <section class="card auth-container">
+    <div class="auth-header">
+      <h2>📝 Crear Cuenta</h2>
+      <p>Registra un nuevo usuario de administrador</p>
+    </div>
 
     <div id="alertBox" class="alert alert-hidden"></div>
 
@@ -156,7 +95,7 @@ if (isset($_SESSION['admin'])) {
         >
       </div>
 
-      <div class="button-group">
+      <div class="auth-actions">
         <button type="submit" class="btn primary" id="btnRegister">
           Registrarse
         </button>
@@ -164,9 +103,16 @@ if (isset($_SESSION['admin'])) {
       </div>
     </form>
 
-    <div class="login-link">
-      ¿Ya tienes cuenta? 
-      <a href="login.php">Inicia sesión aquí</a>
+    <div class="divider">
+      <span>¿Ya tienes cuenta?</span>
+    </div>
+
+    <div class="auth-link">
+      <a href="login.php">🔐 Inicia sesión aquí</a>
+    </div>
+
+    <div class="back-link">
+      <a href="../">← Volver al inicio</a>
     </div>
   </section>
 </div>
@@ -234,6 +180,7 @@ form.addEventListener('submit', async (e) => {
 function showAlert(message, type) {
   alertBox.textContent = message;
   alertBox.className = `alert alert-${type}`;
+  alertBox.classList.remove('alert-hidden');
 }
 </script>
 </body>
