@@ -1,8 +1,8 @@
 <?php
-$host = "mysql";
-$db   = "php_project";
-$user = "admin";
-$pass = "admin";
+$host = "localhost";
+$db   = "php_project"; // o project_php (pero que exista)
+$user = "root";
+$pass = "1234";            // o tu contraseña si tienes
 
 try {
     $pdo = new PDO(
@@ -12,6 +12,5 @@ try {
         [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
     );
 } catch (PDOException $e) {
-    header("Location: /errors/500.php");
-    exit;
+    die("Error de conexión: " . $e->getMessage());
 }
