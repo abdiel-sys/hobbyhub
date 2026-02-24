@@ -1,97 +1,145 @@
 <?php
-session_start();
-header("Content-Type: application/json; charset=utf-8");
-
 require_once "../config/database.php";
 
-function json_ok($data = null) {
-  echo json_encode(["ok" => true, "data" => $data], JSON_UNESCAPED_UNICODE);
-  exit;
+header("Content-Type: application/json; charset=UTF-8");
+
+
+if (
+    $_SERVER['REQUEST_METHOD'] === 'POST' &&
+    (!isset($_SERVER['HTTP_X_REQUESTED_WITH']) ||
+     strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) !== 'xmlhttprequest')
+) {
+    http_response_code(403);
+    echo json_encode([
+        "ok" => false,
+        "error" => "Acceso no permitido"
+    ]);
+    exit;
 }
 
-function json_err($msg, $code = 400) {
-  http_response_code($code);
-  echo json_encode(["ok" => false, "error" => $msg], JSON_UNESCAPED_UNICODE);
-  exit;
-}
-
-// ✅ Proteger API: solo admin logueado
-if (!isset($_SESSION['admin'])) {
-  json_err("No autorizado", 401);
-}
-
-$action = $_GET["action"] ?? "";
+$action = $_GET['action'] ?? "";
 
 try {
-  if ($action === "list") {
-    $stmt = $pdo->query("SELECT * FROM posts ORDER BY created_at DESC");
-    $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    json_ok($posts);
-  }
 
-  if ($action === "create") {
-    if ($_SERVER["REQUEST_METHOD"] !== "POST") json_err("Método no permitido", 405);
 
-    $title = trim($_POST["title"] ?? "");
-    $content = trim($_POST["content"] ?? "");
-    $category = $_POST["category"] ?? "cocina";
-    $read_time = (int)($_POST["read_time"] ?? 0);
-    $tags = trim($_POST["tags"] ?? "");
+    if ($action === "list") {
 
-    if (strlen($title) < 5) json_err("Título muy corto");
-    if (strlen($content) < 20) json_err("Contenido muy corto");
-    if (!in_array($category, ["cocina", "viajes", "gaming"], true)) json_err("Categoría inválida");
-    if ($read_time <= 0) json_err("Tiempo de lectura inválido");
+        $stmt = $pdo->query("
+            SELECT 
+                id,
+                title,
+                content,
+                category,
+                read_time,
+                tags,
+                created_at
+            FROM posts
+            ORDER BY created_at DESC
+        ");
 
-    $stmt = $pdo->prepare("
-      INSERT INTO posts (title, content, category, read_time, created_at, tags)
-      VALUES (?, ?, ?, ?, CURDATE(), ?)
-    ");
-    $stmt->execute([$title, $content, $category, $read_time, $tags]);
+        $posts = $stmt->fetchAll();
 
-    json_ok(["id" => $pdo->lastInsertId()]);
-  }
+        echo json_encode([
+            "ok" => true,
+            "data" => $posts
+        ]);
+        exit;
+    }
 
-  if ($action === "update") {
-    if ($_SERVER["REQUEST_METHOD"] !== "POST") json_err("Método no permitido", 405);
+  
+    if ($action === "create") {
 
-    $id = (int)($_POST["id"] ?? 0);
-    $title = trim($_POST["title"] ?? "");
-    $content = trim($_POST["content"] ?? "");
-    $category = $_POST["category"] ?? "cocina";
-    $read_time = (int)($_POST["read_time"] ?? 0);
-    $tags = trim($_POST["tags"] ?? "");
+        $title     = trim($_POST['title'] ?? "");
+        $content   = trim($_POST['content'] ?? "");
+        $category  = $_POST['category'] ?? "";
+        $read_time = (int)($_POST['read_time'] ?? 0);
+        $tags      = trim($_POST['tags'] ?? "");
 
-    if ($id <= 0) json_err("ID inválido");
-    if (strlen($title) < 5) json_err("Título muy corto");
-    if (strlen($content) < 20) json_err("Contenido muy corto");
-    if (!in_array($category, ["cocina", "viajes", "gaming"], true)) json_err("Categoría inválida");
-    if ($read_time <= 0) json_err("Tiempo de lectura inválido");
+        if (strlen($title) < 5 || strlen($content) < 20) {
+            throw new Exception("Datos inválidos");
+        }
 
-    $stmt = $pdo->prepare("
-      UPDATE posts
-      SET title = ?, content = ?, category = ?, read_time = ?, tags = ?
-      WHERE id = ?
-    ");
-    $stmt->execute([$title, $content, $category, $read_time, $tags, $id]);
+        $stmt = $pdo->prepare("
+            INSERT INTO posts (title, content, category, read_time, tags)
+            VALUES (?, ?, ?, ?, ?)
+        ");
 
-    json_ok(true);
-  }
+        $stmt->execute([
+            $title,
+            $content,
+            $category,
+            $read_time,
+            $tags
+        ]);
 
-  if ($action === "delete") {
-    if ($_SERVER["REQUEST_METHOD"] !== "POST") json_err("Método no permitido", 405);
+        echo json_encode([
+            "ok" => true,
+            "id" => $pdo->lastInsertId()
+        ]);
+        exit;
+    }
 
-    $id = (int)($_POST["id"] ?? 0);
-    if ($id <= 0) json_err("ID inválido");
+    
+    if ($action === "update") {
 
-    $stmt = $pdo->prepare("DELETE FROM posts WHERE id = ?");
-    $stmt->execute([$id]);
+        $id        = (int)($_POST['id'] ?? 0);
+        $title     = trim($_POST['title'] ?? "");
+        $content   = trim($_POST['content'] ?? "");
+        $category  = $_POST['category'] ?? "";
+        $read_time = (int)($_POST['read_time'] ?? 0);
+        $tags      = trim($_POST['tags'] ?? "");
 
-    json_ok(true);
-  }
+        if ($id <= 0) {
+            throw new Exception("ID inválido");
+        }
 
-  json_err("Acción inválida", 400);
+        $stmt = $pdo->prepare("
+            UPDATE posts
+            SET title = ?, content = ?, category = ?, read_time = ?, tags = ?
+            WHERE id = ?
+        ");
 
-} catch (PDOException $e) {
-  json_err("Error BD: " . $e->getMessage(), 500);
+        $stmt->execute([
+            $title,
+            $content,
+            $category,
+            $read_time,
+            $tags,
+            $id
+        ]);
+
+        echo json_encode([
+            "ok" => true
+        ]);
+        exit;
+    }
+
+ 
+    if ($action === "delete") {
+
+        $id = (int)($_POST['id'] ?? 0);
+
+        if ($id <= 0) {
+            throw new Exception("ID inválido");
+        }
+
+        $stmt = $pdo->prepare("DELETE FROM posts WHERE id = ?");
+        $stmt->execute([$id]);
+
+        echo json_encode([
+            "ok" => true
+        ]);
+        exit;
+    }
+
+
+    throw new Exception("Acción no válida");
+
+} catch (Exception $e) {
+
+    http_response_code(400);
+    echo json_encode([
+        "ok" => false,
+        "error" => $e->getMessage()
+    ]);
 }
