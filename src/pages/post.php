@@ -35,6 +35,6 @@ $breadcrumbs = [
   <h2><?= htmlspecialchars($post['title']) ?></h2>
   <p><?= nl2br($post['content']) ?></p>
 
-  <a class="btn" href="/index.php">← Volver</a>
+  <a class="btn" onclick="history.back()">← Volver</a>
 </section>
 <?php require_once "../includes/footer.php"; ?>

@@ -29,7 +29,6 @@ $stmt->execute([
 ]);
 
 $posts = $stmt->fetchAll();
-echo $q;
 ?>
 <?php require_once "../includes/breadcrumbs.php"; ?>
 <main>

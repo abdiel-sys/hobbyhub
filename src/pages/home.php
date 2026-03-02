@@ -32,7 +32,7 @@ require_once "includes/breadcrumbs.php";
 
 
       <a class="btn primary"
-         href="post.php?id=<?= (int)$post['id'] ?>">
+         href="pages/post.php?id=<?= (int)$post['id'] ?>">
          Leer artículo
       </a>
     </article>
