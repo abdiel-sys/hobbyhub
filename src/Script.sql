@@ -106,9 +106,13 @@ VALUES (
   'admin',
   '$2y$10$zaja0Wbaf13rG7qcLaT20.DLshp4MJexT2O.hcklVk8c5umGvw7pK'
 );
-ALTER TABLE users ADD COLUMN email VARCHAR(255) NOT NULL UNIQUE;
+
+-- Agregar columnas opcionales si no existen
 ALTER TABLE users 
-ADD reset_token VARCHAR(255) NULL,
-ADD reset_expires DATETIME NULL;
+ADD COLUMN IF NOT EXISTS email VARCHAR(255);
+ALTER TABLE users 
+ADD COLUMN IF NOT EXISTS reset_token VARCHAR(255) NULL;
+ALTER TABLE users 
+ADD COLUMN IF NOT EXISTS reset_expires DATETIME NULL;
 
 

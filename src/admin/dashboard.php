@@ -1,15 +1,30 @@
 <?php
 require_once "auth.php";
+
+$currentUser = getUser();
 ?>
 
 <?php require_once "../includes/header.php"; ?>
 
 <main>
   <section class="card">
-    <h2>Admin — Posts</h2>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+      <div>
+        <h2>Admin — Posts</h2>
+        <p style="margin: 5px 0; color: var(--text-secondary); font-size: 0.9em;">
+          👤 Bienvenido, <strong><?php echo htmlspecialchars($currentUser['username']); ?></strong>
+        </p>
+      </div>
+      <div style="text-align: right;">
+        <small style="color: var(--text-secondary);"><?php echo htmlspecialchars($currentUser['email']); ?></small>
+      </div>
+    </div>
 
-    <button class="btn primary" id="btnNew">+ Nuevo post</button>
-    <a class="btn" href="logout.php">Cerrar sesión</a>
+    <div style="display: flex; gap: 10px;">
+      <button class="btn primary" id="btnNew">+ Nuevo post</button>
+      <a class="btn" href="profile.php">👤 Mi Perfil</a>
+      <a class="btn" href="logout.php">Cerrar sesión</a>
+    </div>
 
     <div class="sep"></div>
 

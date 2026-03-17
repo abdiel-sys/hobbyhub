@@ -1,5 +1,6 @@
 <?php
 require_once "../config/database.php";
+require_once "../config/user_functions.php";
 session_start();
 
 $error = "";
@@ -13,8 +14,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
   $user = $stmt->fetch();
 
   if ($user && password_verify($password, $user['password'])) {
+    // Guardar todos los datos del usuario en sesión
+    setUserSession($user);
     $_SESSION['admin'] = $user['username'];
-
 
     header("Location: dashboard.php");
     exit;

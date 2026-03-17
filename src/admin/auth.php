@@ -1,7 +1,10 @@
 <?php
+require_once __DIR__ . '/../config/user_functions.php';
+
 session_start();
 
-if (!isset($_SESSION['admin'])) {
+// Verificar que el usuario está autenticado
+if (!isUserLoggedIn()) {
     header("Location: login.php");
     exit;
 }
