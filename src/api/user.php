@@ -57,11 +57,53 @@ try {
         exit;
         
     } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        // Actualizar datos del usuario
+        // Obtener acción
+        $action = trim($_POST['action'] ?? "");
+        $user = getUser();
+        
+        // Cambiar contraseña
+        if ($action === 'change_password') {
+            $currentPassword = $_POST['current_password'] ?? "";
+            $newPassword = $_POST['new_password'] ?? "";
+            
+            // Validaciones
+            if (empty($currentPassword)) {
+                throw new Exception("Debes ingresar tu contraseña actual");
+            }
+            
+            if (empty($newPassword)) {
+                throw new Exception("Debes ingresar una nueva contraseña");
+            }
+            
+            if (strlen($newPassword) < 8) {
+                throw new Exception("La contraseña debe tener al menos 8 caracteres");
+            }
+            
+            // Verificar contraseña actual
+            $stmt = $pdo->prepare("SELECT password FROM users WHERE id = ?");
+            $stmt->execute([$user['id']]);
+            $dbUser = $stmt->fetch();
+            
+            if (!$dbUser || !password_verify($currentPassword, $dbUser['password'])) {
+                throw new Exception("La contraseña actual es incorrecta");
+            }
+            
+            // Cambiar contraseña
+            $newHash = password_hash($newPassword, PASSWORD_DEFAULT);
+            $stmt = $pdo->prepare("UPDATE users SET password = ? WHERE id = ?");
+            $stmt->execute([$newHash, $user['id']]);
+            
+            echo json_encode([
+                "ok" => true,
+                "message" => "Contraseña cambiada exitosamente"
+            ]);
+            exit;
+        }
+        
+        // Actualizar datos del usuario (email, username)
         $email = trim($_POST['email'] ?? "");
         $username = trim($_POST['username'] ?? "");
         
-        $user = getUser();
         $updated = false;
         
         // Validar y actualizar email
