@@ -73,7 +73,17 @@ if (isset($_SESSION['admin'])) {
                         minlength="3"
                         pattern="[a-zA-Z0-9_-]{3,50}"
                         title="Solo letras, números, guiones y guiones bajos">
-                </div>
+          </div>
+<div class="form-group">
+    <label for="email">Correo electrónico</label>
+    <input
+        class="input"
+        type="email"
+        id="email"
+        name="email"
+        placeholder="Ej: usuario@email.com"
+        required>
+</div>
 
                 <div class="form-group">
                     <label for="password">Contraseña</label>

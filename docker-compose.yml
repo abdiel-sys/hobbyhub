@@ -1,5 +1,6 @@
 services:
   php-app:
+    container_name: php-app
     build: ./
     ports:
       - 8080:80
@@ -17,6 +18,13 @@ services:
       - MYSQL_DATABASE=php_project
       - MYSQL_USER=admin
       - MYSQL_PASSWORD=admin
+      - MAIL_HOST
+      - MAIL_PORT
+      - MAIL_USERNAME
+      - MAIL_PASSWORD
+      - MAIL_FROM
+      - MAIL_FROM_NAME
+      - APP_URL
     volumes:
       - mysql-data:/var/lib/mysql/
 

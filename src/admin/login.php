@@ -57,7 +57,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
           <label for="password">Contraseña</label>
           <input class="input" type="password" id="password" name="password" placeholder="Ingresa tu contraseña" required>
         </div>
-
+        <div class="auth-link">
+          <a href="forgot-password.php">¿Olvidaste tu contraseña?</a>
+        </div>
         <div class="auth-actions">
           <button type="submit" class="btn primary">Entrar</button>
           <button type="reset" class="btn">Limpiar</button>

@@ -20,12 +20,17 @@ if (
 try {
     // Obtener datos del formulario
     $username = trim($_POST['username'] ?? "");
+    $email = trim($_POST['email'] ?? "");
     $password = trim($_POST['password'] ?? "");
     $password_confirm = trim($_POST['password_confirm'] ?? "");
 
     // Validaciones
     if (strlen($username) < 3) {
         throw new Exception("El usuario debe tener al menos 3 caracteres");
+    }
+
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        throw new Exception("El correo electrónico no es válido");
     }
 
     if (strlen($password) < 6) {
@@ -36,19 +41,20 @@ try {
         throw new Exception("Las contraseñas no coinciden");
     }
 
-    // Validar que el usuario no exista
-    $stmt = $pdo->prepare("SELECT id FROM users WHERE username = ?");
-    $stmt->execute([$username]);
+    // Validar que el usuario o email no existan
+    $stmt = $pdo->prepare("SELECT id FROM users WHERE username = ? OR email = ?");
+    $stmt->execute([$username, $email]);
+
     if ($stmt->fetch()) {
-        throw new Exception("El usuario ya está registrado");
+        throw new Exception("El usuario o el correo ya están registrados");
     }
 
     // Hashear la contraseña
     $password_hashed = password_hash($password, PASSWORD_DEFAULT);
 
     // Insertar nuevo usuario
-    $stmt = $pdo->prepare("INSERT INTO users (username, password) VALUES (?, ?)");
-    $stmt->execute([$username, $password_hashed]);
+    $stmt = $pdo->prepare("INSERT INTO users (username, email, password) VALUES (?, ?, ?)");
+    $stmt->execute([$username, $email, $password_hashed]);
 
     echo json_encode([
         "ok" => true,
