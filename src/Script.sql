@@ -96,15 +96,17 @@ CREATE TABLE IF NOT EXISTS users (
   id INT AUTO_INCREMENT PRIMARY KEY,
   username VARCHAR(50) UNIQUE NOT NULL,
   password VARCHAR(255) NOT NULL,
+  role ENUM('user','editor','admin') NOT NULL DEFAULT 'user',
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   INDEX idx_username (username)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Insertar usuario admin solo si no existe
-INSERT IGNORE INTO users (username, password)
+INSERT IGNORE INTO users (username, password, role)
 VALUES (
   'admin',
-  '$2y$10$zaja0Wbaf13rG7qcLaT20.DLshp4MJexT2O.hcklVk8c5umGvw7pK'
+  '$2y$10$zaja0Wbaf13rG7qcLaT20.DLshp4MJexT2O.hcklVk8c5umGvw7pK',
+  'admin'
 );
 
 -- Agregar columnas opcionales si no existen
@@ -114,5 +116,10 @@ ALTER TABLE users
 ADD COLUMN IF NOT EXISTS reset_token VARCHAR(255) NULL;
 ALTER TABLE users 
 ADD COLUMN IF NOT EXISTS reset_expires DATETIME NULL;
+ALTER TABLE users 
+ADD COLUMN IF NOT EXISTS role ENUM('user','editor','admin') NOT NULL DEFAULT 'user';
+
+-- Asegurar que el usuario admin tenga el rol correcto
+UPDATE users SET role = 'admin' WHERE username = 'admin';
 
 

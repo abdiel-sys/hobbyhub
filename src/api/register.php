@@ -52,9 +52,9 @@ try {
     // Hashear la contraseña
     $password_hashed = password_hash($password, PASSWORD_DEFAULT);
 
-    // Insertar nuevo usuario
-    $stmt = $pdo->prepare("INSERT INTO users (username, email, password) VALUES (?, ?, ?)");
-    $stmt->execute([$username, $email, $password_hashed]);
+    // Insertar nuevo usuario con rol default
+    $stmt = $pdo->prepare("INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)");
+    $stmt->execute([$username, $email, $password_hashed, 'user']);
 
     echo json_encode([
         "ok" => true,
