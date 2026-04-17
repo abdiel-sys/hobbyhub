@@ -1,0 +1,19 @@
+# ============================================
+# PROTECCIÓN DE SEGURIDAD - RAÍZ PROYECTO
+# ============================================
+
+# Desactivar listado de directorios
+Options -Indexes
+
+# Proteger archivos de setup y verificación
+# Estos archivos solo deben ejecutarse manualmente en desarrollo
+<FilesMatch "^(setup_db|verify_db|update_admin_hash|hash)\.php$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Permitir acceso a la carpeta src/ solamente
+<Directory "src">
+    Order allow,deny
+    Allow from all
+</Directory>
