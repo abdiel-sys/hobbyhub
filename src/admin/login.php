@@ -22,7 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
       unset($_SESSION['admin']);
     }
 
-    header("Location: dashboard.php");
+    header("Location: /");
     exit;
   } else {
     $error = "Credenciales incorrectas";
