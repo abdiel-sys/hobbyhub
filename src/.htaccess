@@ -6,29 +6,7 @@
 # Desactivar listado de directorios
 Options -Indexes
 
-# Proteger carpeta config/ - Bloquear acceso directo
-<Directory "config">
-    Order allow,deny
-    Deny from all
-</Directory>
-
-# Proteger carpeta includes/ - Bloquear acceso directo
-<Directory "includes">
-    Order allow,deny
-    Deny from all
-</Directory>
-
-# Bloquear archivos PHP específicos en carpeta config
-<FilesMatch "^config/.*\.php$">
-    Order allow,deny
-    Deny from all
-</FilesMatch>
-
-# Bloquear archivos PHP específicos en carpeta includes
-<FilesMatch "^includes/.*\.php$">
-    Order allow,deny
-    Deny from all
-</FilesMatch>
+# Config e includes se protegen a través de archivos .htaccess dentro de cada una
 
 # ============================================
 # PÁGINAS DE ERROR PERSONALIZADAS
