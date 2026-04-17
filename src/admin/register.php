@@ -1,9 +1,10 @@
 <?php
 require_once "../config/database.php";
+require_once "../config/user_functions.php";
 session_start();
 
-// Si ya está logueado, redirigir al dashboard
-if (isset($_SESSION['admin'])) {
+// Si ya está logueado como admin, redirigir al dashboard
+if (isUserLoggedIn() && userHasRole('admin')) {
     header("Location: dashboard.php");
     exit;
 }

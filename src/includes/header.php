@@ -3,6 +3,8 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+require_once __DIR__ . '/../config/user_functions.php';
+
 /*
  * Detecta automáticamente la ruta base hasta /src
  * Ejemplo:
@@ -37,10 +39,12 @@ $BASE = ($pos !== false) ? substr($uri, 0, $pos) . '/src' : '';
     <a class="pill" href="<?= $BASE ?>/pages/category.php?cat=gaming">Gaming</a>
     <a class="pill" href="<?= $BASE ?>/sitemap-tree.php">Mapa de sitio</a>
 
-    <?php if (!isset($_SESSION['admin'])): ?>
+    <?php if (!isUserLoggedIn()): ?>
       <a class="pill" href="<?= $BASE ?>/admin/login.php">🔐 Login</a>
     <?php else: ?>
-      <a class="pill" href="<?= $BASE ?>/admin/dashboard.php">🛠 Admin</a>
+      <?php if (userHasRole('admin')): ?>
+        <a class="pill" href="<?= $BASE ?>/admin/dashboard.php">🛠 Admin</a>
+      <?php endif; ?>
       <a class="pill" href="<?= $BASE ?>/admin/logout.php">🚪 Logout</a>
     <?php endif; ?>
   </nav>

@@ -191,6 +191,33 @@ function userHasRole($roles) {
 }
 
 /**
+ * Requiere que el usuario esté autenticado.
+ *
+ * @param string $loginUrl URL de redirección para login.
+ */
+function requireLogin($loginUrl = '/admin/login.php') {
+    if (!isUserLoggedIn()) {
+        header("Location: {$loginUrl}");
+        exit;
+    }
+}
+
+/**
+ * Requiere que el usuario tenga un rol específico.
+ *
+ * @param string|array $roles Rol o lista de roles permitidos.
+ */
+function requireRole($roles) {
+    requireLogin();
+
+    if (!userHasRole($roles)) {
+        http_response_code(403);
+        header("Location: /errors/403.php");
+        exit;
+    }
+}
+
+/**
  * Cierra la sesión del usuario
  * 
  * @return bool true si se cerró correctamente
