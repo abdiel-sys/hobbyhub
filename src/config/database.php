@@ -1,9 +1,9 @@
 <?php
 
-$DB_HOST = "localhost";
-$DB_NAME = "project_php";
-$DB_USER = "root";
-$DB_PASS = "";
+$DB_HOST = getenv('DB_HOST') ?: "mysql";
+$DB_NAME = getenv('DB_NAME') ?: "project_php";
+$DB_USER = getenv('DB_USER') ?: "root";
+$DB_PASS = getenv('DB_PASS') !== false ? getenv('DB_PASS') : "root";
 
 
 try {

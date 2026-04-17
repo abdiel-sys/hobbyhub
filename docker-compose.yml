@@ -6,6 +6,8 @@ services:
       - 8080:80
     volumes:
       - ./src/:/var/www/html/
+    env_file:
+      - .env
     depends_on:
       - mysql
 
@@ -18,13 +20,6 @@ services:
       - MYSQL_DATABASE=project_php
       - MYSQL_USER=root
       - MYSQL_PASSWORD=root
-      - MAIL_HOST
-      - MAIL_PORT
-      - MAIL_USERNAME
-      - MAIL_PASSWORD
-      - MAIL_FROM
-      - MAIL_FROM_NAME
-      - APP_URL
     volumes:
       - mysql-data:/var/lib/mysql/
 
