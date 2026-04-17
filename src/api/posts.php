@@ -1,5 +1,7 @@
 <?php
 require_once "../config/database.php";
+require_once "../config/user_functions.php";
+session_start();
 
 header("Content-Type: application/json; charset=UTF-8");
 
@@ -49,6 +51,16 @@ try {
   
     if ($action === "create") {
 
+        // Solo admins pueden crear posts
+        if (!isUserLoggedIn() || !userHasRole('admin')) {
+            http_response_code(403);
+            echo json_encode([
+                "ok" => false,
+                "error" => "No tienes permiso para crear posts"
+            ]);
+            exit;
+        }
+
         $title     = trim($_POST['title'] ?? "");
         $content   = trim($_POST['content'] ?? "");
         $category  = $_POST['category'] ?? "";
@@ -81,6 +93,16 @@ try {
 
     
     if ($action === "update") {
+
+        // Solo admins pueden editar posts
+        if (!isUserLoggedIn() || !userHasRole('admin')) {
+            http_response_code(403);
+            echo json_encode([
+                "ok" => false,
+                "error" => "No tienes permiso para actualizar posts"
+            ]);
+            exit;
+        }
 
         $id        = (int)($_POST['id'] ?? 0);
         $title     = trim($_POST['title'] ?? "");
@@ -116,6 +138,16 @@ try {
 
  
     if ($action === "delete") {
+
+        // Solo admins pueden eliminar posts
+        if (!isUserLoggedIn() || !userHasRole('admin')) {
+            http_response_code(403);
+            echo json_encode([
+                "ok" => false,
+                "error" => "No tienes permiso para eliminar posts"
+            ]);
+            exit;
+        }
 
         $id = (int)($_POST['id'] ?? 0);
 

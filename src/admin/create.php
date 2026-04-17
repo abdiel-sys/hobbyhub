@@ -1,6 +1,10 @@
 <?php
 require_once "auth.php";
+require_once "../config/user_functions.php";
 require_once "../config/database.php";
+
+// Solo admins pueden crear posts
+requireRole('admin');
 
 function isAjaxRequest(): bool {
   return (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest')

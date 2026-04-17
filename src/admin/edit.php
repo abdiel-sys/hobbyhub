@@ -5,7 +5,11 @@ if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
 }
 
 require_once "auth.php";
+require_once "../config/user_functions.php";
 require_once "../config/database.php";
+
+// Solo admins pueden editar posts
+requireRole('admin');
 
 function isAjaxRequest(): bool {
   return (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest')
