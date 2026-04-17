@@ -16,7 +16,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
   if ($user && password_verify($password, $user['password'])) {
     // Guardar todos los datos del usuario en sesión
     setUserSession($user);
-    $_SESSION['admin'] = $user['username'];
+    if (($user['role'] ?? 'user') === 'admin') {
+      $_SESSION['admin'] = $user['username'];
+    } else {
+      unset($_SESSION['admin']);
+    }
 
     header("Location: dashboard.php");
     exit;

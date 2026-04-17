@@ -1,0 +1,82 @@
+# ============================================
+# CONFIGURACIÓN DE NGINX PARA HOBBYHUB
+# ============================================
+# 
+# Este archivo es un ejemplo de configuración para Nginx.
+# Úsalo en tu bloque server de Nginx para proteger rutas sensibles.
+# 
+# Ubicación típica: /etc/nginx/sites-available/hobbyhub
+#
+
+server {
+    listen 80;
+    server_name example.com www.example.com;
+
+    root /var/www/hobbyhub;
+    index index.php;
+
+    # ============================================
+    # PROTECCIÓN DE CARPETAS SENSIBLES
+    # ============================================
+    
+    # Bloquear acceso directo a carpeta config/
+    location ^~ /src/config/ {
+        return 403;
+    }
+
+    # Bloquear acceso directo a carpeta includes/
+    location ^~ /src/includes/ {
+        return 403;
+    }
+
+    # Bloquear listado de directorios
+    location / {
+        try_files $uri $uri/ =404;
+        autoindex off;
+    }
+
+    # ============================================
+    # PROTECCIÓN DE ARCHIVOS SENSIBLES EN RAÍZ
+    # ============================================
+    
+    location ~ ^/(setup_db|verify_db|update_admin_hash|hash)\.php$ {
+        return 403;
+    }
+
+    # ============================================
+    # PROCESAMIENTO DE PHP
+    # ============================================
+    
+    location ~ \.php$ {
+        try_files $uri =404;
+        fastcgi_pass unix:/var/run/php-fpm.sock;
+        fastcgi_index index.php;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        include fastcgi_params;
+    }
+
+    # ============================================
+    # PÁGINAS DE ERROR PERSONALIZADAS
+    # ============================================
+    
+    error_page 400 /errors/400.php;
+    error_page 401 /errors/401.php;
+    error_page 403 /errors/403.php;
+    error_page 404 /errors/404.php;
+    error_page 405 /errors/405.php;
+    error_page 500 /errors/500.php;
+
+    # ============================================
+    # SEGURIDAD ADICIONAL
+    # ============================================
+    
+    # Prevenir acceso a archivos ocultos
+    location ~ /\. {
+        return 403;
+    }
+
+    # Bloquear archivos de respaldo
+    location ~ \.(bak|config|sql|bkp)$ {
+        return 403;
+    }
+}

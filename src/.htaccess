@@ -1,9 +1,42 @@
 
+# ============================================
+# PROTECCIÓN DE SEGURIDAD - HOBBYHUB
+# ============================================
+
+# Desactivar listado de directorios
+Options -Indexes
+
+# Proteger carpeta config/ - Bloquear acceso directo
+<Directory "config">
+    Order allow,deny
+    Deny from all
+</Directory>
+
+# Proteger carpeta includes/ - Bloquear acceso directo
+<Directory "includes">
+    Order allow,deny
+    Deny from all
+</Directory>
+
+# Bloquear archivos PHP específicos en carpeta config
+<FilesMatch "^config/.*\.php$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Bloquear archivos PHP específicos en carpeta includes
+<FilesMatch "^includes/.*\.php$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# ============================================
+# PÁGINAS DE ERROR PERSONALIZADAS
+# ============================================
 ErrorDocument 400 /errors/400.php
 ErrorDocument 401 /errors/401.php
 ErrorDocument 403 /errors/403.php
 ErrorDocument 404 /errors/404.php
 ErrorDocument 405 /errors/405.php
 ErrorDocument 500 /errors/500.php
-
 

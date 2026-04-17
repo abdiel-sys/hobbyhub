@@ -31,7 +31,7 @@ function getUserById($userId) {
     }
     
     try {
-        $stmt = $pdo->prepare("SELECT id, username, email, created_at FROM users WHERE id = ?");
+        $stmt = $pdo->prepare("SELECT id, username, email, created_at, role FROM users WHERE id = ?");
         $stmt->execute([$userId]);
         return $stmt->fetch();
     } catch (PDOException $e) {
@@ -54,7 +54,7 @@ function getUserByUsername($username) {
     }
     
     try {
-        $stmt = $pdo->prepare("SELECT id, username, email, created_at FROM users WHERE username = ?");
+        $stmt = $pdo->prepare("SELECT id, username, email, created_at, role FROM users WHERE username = ?");
         $stmt->execute([$username]);
         return $stmt->fetch();
     } catch (PDOException $e) {
@@ -78,7 +78,8 @@ function setUserSession($userData) {
         'id' => $userData['id'] ?? null,
         'username' => $userData['username'] ?? null,
         'email' => $userData['email'] ?? null,
-        'created_at' => $userData['created_at'] ?? null
+        'created_at' => $userData['created_at'] ?? null,
+        'role' => $userData['role'] ?? 'user'
     ];
     
     return true;
@@ -158,6 +159,62 @@ function updateUserField($userId, $field, $value) {
  */
 function isUserLoggedIn() {
     return isset($_SESSION['user']) && !empty($_SESSION['user']);
+}
+
+/**
+ * Obtiene el rol del usuario actual en sesión
+ * 
+ * @return string|null Rol del usuario o null si no está autenticado
+ */
+function getUserRole() {
+    $user = getUser();
+    return $user['role'] ?? null;
+}
+
+/**
+ * Verifica si el usuario tiene uno de los roles permitidos
+ * 
+ * @param string|array $roles Rol o lista de roles permitidos
+ * @return bool true si el usuario tiene al menos un rol requerido
+ */
+function userHasRole($roles) {
+    $userRole = getUserRole();
+    if ($userRole === null) {
+        return false;
+    }
+
+    if (is_array($roles)) {
+        return in_array($userRole, $roles, true);
+    }
+
+    return $userRole === $roles;
+}
+
+/**
+ * Requiere que el usuario esté autenticado.
+ *
+ * @param string $loginUrl URL de redirección para login.
+ */
+function requireLogin($loginUrl = '/admin/login.php') {
+    if (!isUserLoggedIn()) {
+        header("Location: {$loginUrl}");
+        exit;
+    }
+}
+
+/**
+ * Requiere que el usuario tenga un rol específico.
+ *
+ * @param string|array $roles Rol o lista de roles permitidos.
+ */
+function requireRole($roles) {
+    requireLogin();
+
+    if (!userHasRole($roles)) {
+        http_response_code(403);
+        header("Location: /errors/403.php");
+        exit;
+    }
 }
 
 /**

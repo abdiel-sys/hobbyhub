@@ -135,7 +135,11 @@ try {
         // Actualizar sesión desde la base de datos
         if ($updated) {
             updateUserSession($user['id']);
-            $_SESSION['admin'] = getUser()['username'];
+            if (userHasRole('admin')) {
+                $_SESSION['admin'] = getUser()['username'];
+            } else {
+                unset($_SESSION['admin']);
+            }
         }
         
         echo json_encode([

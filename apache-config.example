@@ -1,0 +1,107 @@
+# ============================================
+# CONFIGURACIÓN DE APACHE PARA HOBBYHUB
+# ============================================
+# 
+# Este archivo es un ejemplo de VirtualHost para Apache.
+# Úsalo en tu configuración de Apache para proteger rutas sensibles.
+# 
+# Ubicación típica: /etc/apache2/sites-available/hobbyhub.conf
+#
+
+<VirtualHost *:80>
+    ServerName example.com
+    ServerAlias www.example.com
+    ServerAdmin admin@example.com
+
+    # Directorio raíz del proyecto
+    DocumentRoot /var/www/hobbyhub
+
+    # ============================================
+    # PROTECCIÓN DE CARPETAS SENSIBLES
+    # ============================================
+    
+    # Bloquear acceso directo a carpeta config/
+    <Directory "/var/www/hobbyhub/src/config">
+        Order allow,deny
+        Deny from all
+    </Directory>
+
+    # Bloquear acceso directo a carpeta includes/
+    <Directory "/var/www/hobbyhub/src/includes">
+        Order allow,deny
+        Deny from all
+    </Directory>
+
+    # ============================================
+    # PROTECCIÓN DE ARCHIVOS SENSIBLES
+    # ============================================
+    
+    # Bloquear archivos de setup en raíz
+    <FilesMatch "^(setup_db|verify_db|update_admin_hash|hash)\.php$">
+        Order allow,deny
+        Deny from all
+    </FilesMatch>
+
+    # Proteger archivos ocultos
+    <FilesMatch "^\.|\.bak$|\.config$|\.sql$">
+        Order allow,deny
+        Deny from all
+    </FilesMatch>
+
+    # ============================================
+    # CONFIGURACIÓN DE DIRECTORIOS
+    # ============================================
+    
+    <Directory "/var/www/hobbyhub/src">
+        Order allow,deny
+        Allow from all
+        
+        # Desactivar listado de directorios
+        Options -Indexes
+        
+        # Reescritura de URLs para rutas limpias (si lo deseas)
+        # Descomenta las siguientes líneas para activar mod_rewrite
+        # <IfModule mod_rewrite.c>
+        #     RewriteEngine On
+        #     RewriteBase /
+        #     RewriteCond %{REQUEST_FILENAME} !-f
+        #     RewriteCond %{REQUEST_FILENAME} !-d
+        #     RewriteRule ^(.*)$ index.php?/$1 [L]
+        # </IfModule>
+    </Directory>
+
+    # ============================================
+    # PÁGINAS DE ERROR PERSONALIZADAS
+    # ============================================
+    
+    ErrorDocument 400 /errors/400.php
+    ErrorDocument 401 /errors/401.php
+    ErrorDocument 403 /errors/403.php
+    ErrorDocument 404 /errors/404.php
+    ErrorDocument 405 /errors/405.php
+    ErrorDocument 500 /errors/500.php
+
+    # ============================================
+    # LOGGING
+    # ============================================
+    
+    CustomLog ${APACHE_LOG_DIR}/hobbyhub-access.log combined
+    ErrorLog ${APACHE_LOG_DIR}/hobbyhub-error.log
+
+    # ============================================
+    # SEGURIDAD ADICIONAL
+    # ============================================
+    
+    # Encabezados de seguridad
+    <IfModule mod_headers.c>
+        # Evitar clickjacking
+        Header always set X-Frame-Options "SAMEORIGIN"
+        
+        # Prevenir sniffing de tipos MIME
+        Header always set X-Content-Type-Options "nosniff"
+        
+        # Activar protección XSS en navegadores antiguos
+        Header always set X-XSS-Protection "1; mode=block"
+    </IfModule>
+
+</VirtualHost>
